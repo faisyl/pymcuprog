@@ -89,10 +89,22 @@ def _parse_literal(literal):
     """
     Literals can either be integers or float values.  Default is Integer
     """
+    if ":" in literal:
+        return list(map(lambda x: int(x, 0), literal.split(":")[:2]))
     try:
         return int(literal, 0)
     except ValueError:
         return float(literal)
+
+def _parse_direct(literal):
+    """
+    Direct literals with offset can either be intergers or floats as offset:value. Offset is int.
+    """
+    if ":" in literal:
+        try:
+            return list(map(lambda x: int(x, 0), literal.split(":")[:2]))
+        except ValueError:
+            return list(map(lambda x: float(x), literal.split(":")[:2]))
 
 def main():
     """
@@ -133,6 +145,9 @@ def main():
 
         Write fuse byte 1 to 0xE0 on a kit:
         - pymcuprog write -m fuses -o 1 -l 0xE0
+                               
+        Write more than one disjointed fuse in direct offset:value format
+        - pymcuprog write -m fuses -D 1:0xe0 -D 4:0x10 -D 8:0xf0
 
         Erase a device on a kit:
         - pymcuprog erase
@@ -223,6 +238,12 @@ def main():
                         type=_parse_literal,
                         nargs='+',
                         help="literal values to write")
+
+    parser.add_argument("-D", "--direct",
+                        type=_parse_direct,
+                        nargs='+',
+                        help="direct offset:value to write")
+
 
     filename_helpstring_extra = "Note that when reading to hex file only "
     filename_helpstring_extra += ", ".join(WRITE_TO_HEX_MEMORIES)

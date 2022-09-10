@@ -37,7 +37,7 @@ PACKAGE_VERSION = {
     "patch": 3,
     # Will be replaced by build number from Jenkins. For local builds the build number is 0 and the 'snapshot' is
     # added as Local Version Identifier
-    "build": '166',
+    "build": '167',
 }
 
 version = "{}.{}.{}.{}".format(PACKAGE_VERSION['major'], PACKAGE_VERSION['minor'],

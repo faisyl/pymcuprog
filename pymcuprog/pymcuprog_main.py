@@ -362,6 +362,10 @@ def _action_write(backend, args):
                 print("Verifying from binary file...")
                 # Verify content, an exception is thrown on mismatch
                 backend.verify_memory(data_from_file, args.memory, args.offset)
+    elif args.direct:
+        print("Writing direct values...")
+        for offset, val in args.direct:
+            backend.write_memory(bytearray([val]), args.memory, offset)
     elif args.literal:
         if args.erase:
             raise PymcuprogNotSupportedError("Erase switch (--erase) is only supported when writing a hex file!")
